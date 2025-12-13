@@ -21,33 +21,43 @@ const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null)
   const [loading, setLoading] = useState(true)
 
-  const createUser = (email, password) => {
-    setLoading(true)
-    return createUserWithEmailAndPassword(auth, email, password)
-  }
+ const createUser = async (email, password) => {
+  setLoading(true)
+  const result = await createUserWithEmailAndPassword(auth, email, password)
+  setLoading(false)
+  return result
+}
 
-  const signIn = (email, password) => {
-    setLoading(true)
-    return signInWithEmailAndPassword(auth, email, password)
-  }
+const signIn = async (email, password) => {
+  setLoading(true)
+  const result = await signInWithEmailAndPassword(auth, email, password)
+  setLoading(false)
+  return result
+}
 
-  const signInWithGoogle = () => {
-    setLoading(true)
-    return signInWithPopup(auth, googleProvider)
-  }
+const signInWithGoogle = async () => {
+  setLoading(true)
+  const result = await signInWithPopup(auth, googleProvider)
+  setLoading(false)
+  return result
+}
 
-  const resetPassword = email => {
-    setLoading(true)
-    return sendPasswordResetEmail(auth, email)
-  }
+const resetPassword = async (email) => {
+  setLoading(true)
+  const result = await sendPasswordResetEmail(auth, email)
+  setLoading(false)
+  return result
+}
 
-  const logOut = async () => {
-    setLoading(true)
-    await axios.get(`${import.meta.env.VITE_API_URL}/logout`, {
-      withCredentials: true,
-    })
-    return signOut(auth)
-  }
+const logOut = async () => {
+  setLoading(true)
+  await axios.get(`${import.meta.env.VITE_API_URL}/logout`, {
+    withCredentials: true,
+  })
+  const result = await signOut(auth)
+  setLoading(false)
+  return result
+}
 
   const updateUserProfile = (name, photo) => {
     return updateProfile(auth.currentUser, {
