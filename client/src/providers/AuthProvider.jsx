@@ -13,6 +13,7 @@ import {
 } from 'firebase/auth'
 import { app } from '../firebase/firebase.config'
 import axios from 'axios'
+  import { toast } from 'react-toastify';
 export const AuthContext = createContext(null)
 const auth = getAuth(app)
 const googleProvider = new GoogleAuthProvider()
@@ -75,12 +76,32 @@ const logOut = async () => {
     return data
   }
 
+  // save user to database function
+  const saveUserToDB = async user => {
+  const currentUser = {
+    email: user?.email,
+    role: 'user',
+    status: 'verified',
+  }
+
+  const { data } = await axios.put(
+    `${import.meta.env.VITE_API_URL}/user`,
+    currentUser,
+  )
+  console.log("user save successfully");
+  
+  return data
+}
+
+
+
   // onAuthStateChange
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, currentUser => {
       setUser(currentUser)
       if (currentUser) {
         getToken(currentUser.email)
+        saveUserToDB(currentUser)
       }
       setLoading(false)
     })
