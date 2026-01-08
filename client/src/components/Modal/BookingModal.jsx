@@ -3,12 +3,13 @@ import {
   Dialog,
   Transition,
   TransitionChild,
-  DialogTitle,
   DialogPanel,
+  DialogTitle,
 } from '@headlessui/react'
+import { format } from 'date-fns'
 import { Fragment } from 'react'
 
-const HostModal = ({ closeModal, isOpen, continueHost }) => {
+const BookingModal = ({ closeModal, isOpen, bookingInfo }) => {
   return (
     <Transition appear show={isOpen} as={Fragment}>
       <Dialog as='div' className='relative z-10' onClose={closeModal}>
@@ -40,31 +41,37 @@ const HostModal = ({ closeModal, isOpen, continueHost }) => {
                   as='h3'
                   className='text-lg font-medium text-center leading-6 text-gray-900'
                 >
-                  Become A Host!
+                  Review Info Before Reserve
                 </DialogTitle>
                 <div className='mt-2'>
                   <p className='text-sm text-gray-500'>
-                    Please read all the terms & conditions before becoming a
-                    host.
+                    Room: {bookingInfo.title}
+                  </p>
+                </div>
+                <div className='mt-2'>
+                  <p className='text-sm text-gray-500'>
+                    Location: {bookingInfo.location}
+                  </p>
+                </div>
+                <div className='mt-2'>
+                  <p className='text-sm text-gray-500'>
+                    Guest: {bookingInfo.guest.name}
+                  </p>
+                </div>
+                <div className='mt-2'>
+                  <p className='text-sm text-gray-500'>
+                    From: {format(new Date(bookingInfo.from), 'PP')} - To:{' '}
+                    {format(new Date(bookingInfo.to), 'PP')}
+                  </p>
+                </div>
+
+                <div className='mt-2'>
+                  <p className='text-sm text-gray-500'>
+                    Price: $ {bookingInfo.price}
                   </p>
                 </div>
                 <hr className='mt-8 ' />
-                <div className='flex mt-2 justify-around'>
-                  <button
-                  onClick={continueHost}
-                    type='button'
-                    className='inline-flex justify-center rounded-md border border-transparent bg-green-100 px-4 py-2 text-sm font-medium text-green-900 hover:bg-green-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2'
-                  >
-                    Continue
-                  </button>
-                  <button
-                    type='button'
-                    className='inline-flex justify-center rounded-md border border-transparent bg-red-100 px-4 py-2 text-sm font-medium text-red-900 hover:bg-red-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2'
-                    onClick={closeModal}
-                  >
-                    Cancel
-                  </button>
-                </div>
+                {/* checkout form */}
               </DialogPanel>
             </TransitionChild>
           </div>
@@ -74,9 +81,10 @@ const HostModal = ({ closeModal, isOpen, continueHost }) => {
   )
 }
 
-HostModal.propTypes = {
+BookingModal.propTypes = {
+  bookingInfo: PropTypes.object,
   closeModal: PropTypes.func,
   isOpen: PropTypes.bool,
 }
 
-export default HostModal
+export default BookingModal
